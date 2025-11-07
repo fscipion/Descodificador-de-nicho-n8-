@@ -156,17 +156,15 @@
     },
     {
       "parameters": {
-        "operation": "download",
+        "operation": "share",
         "fileId": "={{$json.id}}",
-        "options": {
-          "googleFileConversion": {
-            "conversion": {
-              "docsToFormat": "pdf"
-            }
-          }
-        }
+        "permissions": {
+          "role": "writer",
+          "type": "anyone"
+        },
+        "options": {}
       },
-      "name": "Google Drive - Descargar como PDF",
+      "name": "Google Drive - Compartir Documento",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [1550, 300],
@@ -180,11 +178,10 @@
     {
       "parameters": {
         "sendTo": "={{$json.email}}",
-        "subject": "=🎯 Tu Análisis del Descodificador de Nicho™",
-        "message": "=Hola {{$json.nombre}},\n\n¡Gracias por completar nuestro formulario del Descodificador de Nicho™!\n\nHemos analizado tu expertise, tu target y tus transformaciones para crear 3 documentos estratégicos personalizados:\n\n✅ Perfil Completo de tu Cliente Ideal\n✅ Tu Misión Transformacional (copy listo para usar)\n✅ Tu Método Único que te diferencia del mercado\n\nEncontrás el análisis completo en el PDF adjunto.\n\nEstos 3 documentos son la base para todo tu marketing, ventas y posicionamiento.\n\nEn las próximas 24 horas te contactaremos vía WhatsApp para conocer tu feedback y ayudarte con cualquier duda.\n\n¡Esperamos que te sea de gran utilidad!\n\nSaludos,\nEl equipo de Descodificador de Nicho™",
+        "subject": "={{$json.nombre}}, tu descodificador de nicho dentro",
+        "message": "=¡Aloha {{$json.nombre}}!\n\n¡Yeaaaahhhh! Estoy entusiasmado de entregarte tu Decodificador de Nicho personalizado.\n\n¿Qué es el Decodificador de Nicho?\n\nBueno, habiendo ayudado a miles de personas a construir negocios exitosos de educación en línea desde 2010, he descubierto que el éxito y el fracaso se reducen a un elemento crucial: ¿qué tan bien conoces y entiendes las necesidades de tu cliente ideal?\n\nEste decodificador fue creado para acelerar el proceso de identificar exactamente quién es tu cliente ideal, cómo explicar tu misión para captar la atención, y cómo explicar tu diferencia en una frase. Sin esto crakeado, serás invisible online, y no es especialmente lo que te deseo.\n\nEste es un documento funcional, así que puedes editarlo y ajustarlo como consideres conveniente.\n\n⇒ Haz clic aquí para acceder a tu Decodificador de Nicho:\nhttps://docs.google.com/document/d/{{$json.id}}/edit\n\n¡Hablemos rápido para acelerar hacia tus metas más locas!\n\nFranck y todo el equipo de LaTransformateca.com",
         "options": {
-          "attachments": "data:application/pdf;base64,={{$json.data}}",
-          "attachmentsPropertyName": "=Descodificador_Nicho_{{$json.nombre}}.pdf"
+          "senderName": "Franck - LaTransformateca"
         }
       },
       "name": "Gmail - Enviar Documento",
@@ -471,14 +468,14 @@
       "main": [
         [
           {
-            "node": "Google Drive - Descargar como PDF",
+            "node": "Google Drive - Compartir Documento",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Google Drive - Descargar como PDF": {
+    "Google Drive - Compartir Documento": {
       "main": [
         [
           {
