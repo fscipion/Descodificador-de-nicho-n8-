@@ -360,7 +360,7 @@
         "operation": "sendTemplate",
         "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
         "recipientPhoneNumber": "={{$json.telefono}}",
-        "template": "recordatorio_1",
+        "template": "esdecodificador_r1",
         "templateLanguage": "es",
         "components": {
           "values": []
@@ -472,7 +472,7 @@
         "operation": "sendTemplate",
         "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
         "recipientPhoneNumber": "={{$json.telefono}}",
-        "template": "recordatorio_2",
+        "template": "esdecodificador_r2",
         "templateLanguage": "es",
         "components": {
           "values": []
