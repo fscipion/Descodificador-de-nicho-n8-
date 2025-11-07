@@ -22,7 +22,7 @@
       "parameters": {
         "operation": "append",
         "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
-        "range": "Seguimiento!A:K",
+        "range": "Seguimiento!A:L",
         "options": {
           "valueInputMode": "USER_ENTERED"
         },
@@ -32,14 +32,15 @@
             "timestamp": "={{$json.timestamp}}",
             "email": "={{$json.email}}",
             "nombre": "={{$json.nombre}}",
-            "empresa": "={{$json.empresa}}",
-            "nicho": "={{$json.nicho}}",
-            "problema": "={{$json.problema}}",
+            "telefono": "={{$json.telefono}}",
+            "p1_expertise": "={{$json.p1_expertise}}",
+            "p2_resultado": "={{$json.p2_resultado}}",
+            "p3_target": "={{$json.p3_target}}",
+            "p4_transformaciones": "={{$json.p4_transformaciones}}",
             "estado": "Formulario recibido",
             "documento_enviado": "",
             "whatsapp_activado": "",
-            "feedback_nota": "",
-            "notas": ""
+            "feedback_nota": ""
           }
         }
       },
@@ -61,7 +62,7 @@
           "temperature": 0.7,
           "maxTokens": 4000
         },
-        "prompt": "=Eres un experto en análisis de nichos de mercado y creación de estrategias personalizadas.\n\nDatos del usuario:\n- Nombre: {{$json.nombre}}\n- Empresa: {{$json.empresa}}\n- Nicho: {{$json.nicho}}\n- Problema principal: {{$json.problema}}\n- Objetivos: {{$json.objetivos}}\n- Audiencia target: {{$json.audiencia}}\n- Competencia: {{$json.competencia}}\n\nPor favor, genera EXACTAMENTE 3 outputs separados por '###OUTPUT_SEPARATOR###':\n\n1. CUSTOM INSTRUCTIONS (máximo 800 palabras):\nInstrucciones personalizadas para trabajar con este nicho, incluyendo:\n- Tono y estilo de comunicación recomendado\n- Palabras clave y terminología del sector\n- Ángulos de diferenciación únicos\n- Errores comunes a evitar\n\n2. TRAINING DATA (máximo 1000 palabras):\nDatos de entrenamiento estructurados que incluyan:\n- Ejemplos de casos de éxito en nichos similares\n- Framework de análisis de competencia\n- Plantillas de mensajes que resuenan con esta audiencia\n- Métricas clave a seguir\n\n3. PLAN DE ACCIÓN (máximo 800 palabras):\nPlan de acción inmediato de 30 días que incluya:\n- Semana 1-2: Acciones específicas\n- Semana 3-4: Siguientes pasos\n- Quick wins (victorias rápidas)\n- KPIs a monitorizar\n\nFormato importante:\nOUTPUT1\n###OUTPUT_SEPARATOR###\nOUTPUT2\n###OUTPUT_SEPARATOR###\nOUTPUT3"
+        "prompt": "=Eres el Descodificador de Nicho™, un experto en análisis estratégico de nichos de mercado.\n\nTu misión es analizar las respuestas del usuario y generar 3 outputs estratégicos ultra-específicos basados en investigación real del mercado.\n\n## RESPUESTAS DEL USUARIO:\n\nP1 - Expertise/Habilidad: {{$json.p1_expertise}}\nP2 - Resultado Deseado: {{$json.p2_resultado}}\nP3 - Target Específico: {{$json.p3_target}}\nP4 - Transformaciones Logradas: {{$json.p4_transformaciones}}\n\n## TU PROCESO:\n\n1. ANALIZA el mercado/nicho identificado en P1\n2. DEDUCE información crítica:\n   - Intentos fallidos típicos del target (3-5 actividades comunes que NO funcionaron)\n   - Diferenciadores únicos viables (gaps en el mercado actual)\n   - Perfil demográfico y psicográfico completo del target\n   - Lenguaje que usa el target (no jerga de marketing)\n3. GENERA los 3 outputs con máxima especificidad\n\n## INSTRUCCIONES CRÍTICAS:\n\n- NUNCA inventes datos ficticios - basa TODO en conocimiento real del mercado\n- Sé ULTRA-ESPECÍFICO - evita frases genéricas aplicables a cualquier negocio\n- USA el lenguaje del target - cómo habla realmente el cliente ideal\n- COHERENCIA total entre los 3 documentos - deben contar la misma historia\n- Los números y tiempos deben ser REALISTAS (basados en P4)\n\n## GENERA EXACTAMENTE 3 OUTPUTS SEPARADOS POR '###OUTPUT_SEPARATOR###':\n\n---\n\n### OUTPUT 1: DESCRIPCIÓN DEL CLIENTE IDEAL\n\nFormato requerido:\n\nPERFIL DEL CLIENTE IDEAL\n\nDescripción General:\n[Párrafo descriptivo del target basado en P3, incluyendo contexto profesional/vital. Sé específico y visual.]\n\nRango de Edad: [Deducido de P3 - sé específico, ej: \"35-50 años\"]\n\nPoder Adquisitivo: [Deducido del nicho - ej: \"€2,000-4,000/mes ingresos disponibles\"]\n\nDisparador: [Evento externo que justifica que actúen AHORA - deducido del dolor/situación. Ej: \"Acaba de tener su segundo hijo y la fatiga es insostenible\" o \"Su cliente más grande acaba de cancelar y necesita ingresos estables YA\"]\n\nTop 3 Objetivos:\n• Corto Plazo (0-3 meses): [Versión inmediata del resultado en P2]\n• Medio Plazo (3-6 meses): [Versión intermedia del resultado en P2]\n• Largo Plazo (6-12 meses): [Versión amplificada del resultado en P2]\n\nPuntos de Dolor y Frustraciones Hoy:\n• [Dolor principal explícito en P3]\n• [Frustración derivada 1 - de la situación actual]\n• [Frustración derivada 2 - de intentos fallidos previos]\n\nMiedos y Dudas (Pensando en la solución):\n• [Miedo 1 - basado en intentos fallidos: \"Ya probé X y no funcionó\"]\n• [Miedo 2 - escepticismo del mercado: \"Todos prometen lo mismo\"]\n• [Miedo 3 - inversión vs resultados: \"¿Y si invierto y no funciona?\"]\n\nLo que necesitan para llegar a su meta:\n• [Necesidad 1 - claridad/estrategia específica]\n• [Necesidad 2 - prueba social/credibilidad del método]\n• [Necesidad 3 - implementación práctica paso a paso]\n\n---\n\n### OUTPUT 2: MISIÓN TRANSFORMACIONAL\n\nUsa esta fórmula EXACTA:\n\n\"Ayudo a [P3: TARGET PRECISO - copia literalmente] a pasar de [ESTADO CERO - situación dolorosa actual deducida de P3] a [P2: RESULTADO DESEADO - copia literalmente] sin [ACTIVIDAD DOLOROSA 1], sin [ACTIVIDAD DOLOROSA 2] y sin [ACTIVIDAD DOLOROSA 3].\"\n\nCriterios:\n- TARGET PRECISO: Copia exactamente P3\n- ESTADO CERO: Debe resonar emocionalmente (ej: \"sentirse agotadas cada tarde y dependientes del café\")\n- RESULTADO DESEADO: Copia exactamente P2\n- 3 ACTIVIDADES DOLOROSAS: Deben ser reconocibles y comunes en el mercado (ej: \"dietas restrictivas\", \"entrenamientos a las 6am\", \"suplementos caros\")\n\nEjemplo de calidad:\n\"Ayudo a madres profesionales de 35-50 años con jornadas de +10 horas que sufren fatiga crónica a pasar de sentirse exhaustas cada tarde y dependientes del café a recuperar su energía natural y sentir vitalidad constante durante todo el día sin dietas restrictivas, sin entrenamientos intensos a las 6am y sin suplementos caros.\"\n\n---\n\n### OUTPUT 3: MÉTODO ÚNICO\n\nUsa esta fórmula EXACTA:\n\n\"He [MÉTODO/SISTEMA - crear nombre propietario basado en P1 si no lo dio] que ha [P4: RESULTADO CUANTIFICABLE - incluir números + target] en [P4: TIEMPO - extraer de P4], enfocándome en [DIFERENCIADOR POSITIVO ÚNICO - tu enfoque vs. lo común] en vez de [ENFOQUE COMÚN DEL MERCADO que evitas].\"\n\nIMPORTANTE - NO SOLAPAR CON OUTPUT 2:\n- Output 2 = Promesa al CLIENTE (sin actividades dolorosas del cliente)\n- Output 3 = TU CREDIBILIDAD (tu enfoque único vs. métodos comunes del mercado)\n\nEjemplo de lo que NO hacer:\n❌ \"...sin dietas restrictivas, sin entrenamientos intensos\" (esto ya está en Output 2)\n\nEjemplo de lo que SÍ hacer:\n✅ \"...enfocándome en equilibrio hormonal natural y nutrición adaptativa en vez de protocolos keto rígidos y ayuno intermitente extremo\"\n\nCriterios:\n- MÉTODO: Debe sonar propietario (ej: \"Sistema de Energía Hormonal™\", \"Framework de Ventas Automatizadas 3x5\")\n- NÚMEROS: Incluir de P4 (ej: \"más de 100 mujeres\", \"47 consultores\")\n- TIEMPO: Extraer de P4 (ej: \"en 12 semanas\", \"en 60 días\")\n- DIFERENCIADOR: Contrasta tu ENFOQUE POSITIVO vs. lo común (métodos del mercado, no dolores del cliente)\n\nEjemplo de calidad:\n\"He creado el Sistema de Energía Hormonal™ que ha ayudado a más de 100 mujeres profesionales a recuperar su energía en 12 semanas, enfocándome en equilibrio hormonal natural y nutrición adaptativa en vez de protocolos keto rígidos y ayuno intermitente extremo.\"\n\n---\n\nFORMATO DE RESPUESTA (CRÍTICO):\n\nOUTPUT1_COMPLETO_AQUÍ\n###OUTPUT_SEPARATOR###\nOUTPUT2_COMPLETO_AQUÍ\n###OUTPUT_SEPARATOR###\nOUTPUT3_COMPLETO_AQUÍ\n\nGenera ahora los 3 outputs con máxima calidad y especificidad."
       },
       "name": "Claude - Generar 3 Outputs",
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
@@ -87,7 +88,7 @@
       "parameters": {
         "operation": "copy",
         "fileId": "={{$env.GOOGLE_DOC_TEMPLATE_ID}}",
-        "name": "=Análisis de Nicho - {{$json.nombre}} - {{$json.empresa}}",
+        "name": "=Descodificador de Nicho - {{$json.nombre}}",
         "options": {}
       },
       "name": "Google Docs - Copiar Plantilla",
@@ -112,27 +113,19 @@
               "newText": "={{$json.nombre}}"
             },
             {
-              "oldText": "{{EMPRESA}}",
-              "newText": "={{$json.empresa}}"
-            },
-            {
-              "oldText": "{{NICHO}}",
-              "newText": "={{$json.nicho}}"
-            },
-            {
               "oldText": "{{FECHA}}",
               "newText": "={{$now.format('DD/MM/YYYY')}}"
             },
             {
-              "oldText": "{{CUSTOM_INSTRUCTIONS}}",
+              "oldText": "{{CLIENTE_IDEAL}}",
               "newText": "={{$json.claude_output_1}}"
             },
             {
-              "oldText": "{{TRAINING_DATA}}",
+              "oldText": "{{MISION_TRANSFORMACIONAL}}",
               "newText": "={{$json.claude_output_2}}"
             },
             {
-              "oldText": "{{PLAN_ACCION}}",
+              "oldText": "{{METODO_UNICO}}",
               "newText": "={{$json.claude_output_3}}"
             }
           ]
@@ -175,11 +168,11 @@
     {
       "parameters": {
         "sendTo": "={{$json.email}}",
-        "subject": "=Tu Análisis Personalizado de Nicho: {{$json.nicho}}",
-        "message": "=Hola {{$json.nombre}},\n\n¡Gracias por completar nuestro formulario de análisis de nicho!\n\nHemos preparado un documento personalizado con:\n✅ Custom Instructions específicas para tu nicho\n✅ Training Data relevante con casos de éxito\n✅ Plan de Acción de 30 días paso a paso\n\nEncontrás el análisis completo en el PDF adjunto.\n\nEn las próximas 24 horas te contactaremos vía WhatsApp para conocer tu feedback y ayudarte con cualquier duda que tengas sobre el documento.\n\n¡Esperamos que te sea de gran utilidad!\n\nSaludos,\nEl equipo de Descodificador de Nicho",
+        "subject": "=🎯 Tu Análisis del Descodificador de Nicho™",
+        "message": "=Hola {{$json.nombre}},\n\n¡Gracias por completar nuestro formulario del Descodificador de Nicho™!\n\nHemos analizado tu expertise, tu target y tus transformaciones para crear 3 documentos estratégicos personalizados:\n\n✅ Perfil Completo de tu Cliente Ideal\n✅ Tu Misión Transformacional (copy listo para usar)\n✅ Tu Método Único que te diferencia del mercado\n\nEncontrás el análisis completo en el PDF adjunto.\n\nEstos 3 documentos son la base para todo tu marketing, ventas y posicionamiento.\n\nEn las próximas 24 horas te contactaremos vía WhatsApp para conocer tu feedback y ayudarte con cualquier duda.\n\n¡Esperamos que te sea de gran utilidad!\n\nSaludos,\nEl equipo de Descodificador de Nicho™",
         "options": {
           "attachments": "data:application/pdf;base64,={{$json.data}}",
-          "attachmentsPropertyName": "=Análisis_{{$json.empresa}}.pdf"
+          "attachmentsPropertyName": "=Descodificador_Nicho_{{$json.nombre}}.pdf"
         }
       },
       "name": "Gmail - Enviar Documento",
@@ -246,7 +239,7 @@
       "parameters": {
         "operation": "update",
         "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
-        "range": "Seguimiento!A:K",
+        "range": "Seguimiento!A:L",
         "options": {
           "valueInputMode": "USER_ENTERED"
         },
@@ -351,7 +344,7 @@
       "parameters": {
         "operation": "update",
         "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
-        "range": "Seguimiento!A:K",
+        "range": "Seguimiento!A:L",
         "options": {
           "valueInputMode": "USER_ENTERED"
         },
@@ -362,8 +355,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "feedback_nota": "={{$json.message.text}}",
-            "estado": "Feedback recibido",
-            "notas": "=Nota: {{$json.message.text}}/10 - Recibido el {{$now.format('DD/MM/YYYY HH:mm')}}"
+            "estado": "Feedback recibido - {{$json.message.text}}/10"
           }
         }
       },

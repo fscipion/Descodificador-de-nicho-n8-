@@ -1,23 +1,44 @@
-# 🚀 Descodificador de Nicho - Automatización n8n
+# 🚀 Descodificador de Nicho™ - Automatización n8n
 
-Automatización completa que convierte respuestas de Google Forms en análisis personalizados usando Claude AI, generando documentos PDF y enviándolos por email con seguimiento por WhatsApp.
+> **v2.0.0** - Sistema actualizado con el framework Descodificador de Nicho™
+
+Automatización completa que convierte 4 respuestas estratégicas en 3 outputs ultra-específicos usando Claude AI, generando documentos PDF personalizados y enviándolos por email con seguimiento por WhatsApp.
+
+## 🎯 ¿Qué es el Descodificador de Nicho™?
+
+El **Descodificador de Nicho™** es un framework propietario que transforma 4 preguntas estratégicas en 3 documentos accionables:
+
+### Las 4 Preguntas Estratégicas:
+1. **P1**: ¿Cuál es tu habilidad/expertise que enseñas?
+2. **P2**: ¿Cuál es el resultado soñado para tus clientes?
+3. **P3**: ¿Quién es tu cliente ideal específico?
+4. **P4**: ¿Cuántos clientes has transformado y en cuánto tiempo?
+
+### Los 3 Outputs Generados:
+1. **Perfil del Cliente Ideal**: Demográficos, psicográficos, objetivos, miedos, necesidades
+2. **Misión Transformacional**: Copy listo para usar en web y marketing
+3. **Método Único**: Tu diferenciador vs. competencia con prueba social
+
+**Resultado**: Claridad absoluta sobre quién sirves, qué prometes y cómo te diferencias.
+
+---
 
 ## 📋 Descripción del Workflow
 
 Este workflow automatiza todo el proceso de análisis de nicho desde que un usuario completa un formulario hasta el seguimiento por WhatsApp:
 
-1. **Trigger**: Nueva entrada en Google Forms
-2. **Registro**: Actualiza Google Sheets con la información del usuario
-3. **Análisis IA**: Claude genera 3 outputs personalizados:
-   - Custom Instructions para el nicho
-   - Training Data con casos de éxito
-   - Plan de Acción de 30 días
-4. **Documento**: Integra las respuestas de Claude en una plantilla de Google Docs
+1. **Trigger**: Nueva entrada en Google Forms (4 preguntas estratégicas)
+2. **Registro**: Actualiza Google Sheets con las respuestas del usuario
+3. **Análisis IA**: Claude analiza el mercado y genera 3 outputs ultra-específicos:
+   - **Output 1**: Perfil del Cliente Ideal (demográficos, psicográficos, objetivos, miedos)
+   - **Output 2**: Misión Transformacional (fórmula: "Ayudo a [X] a pasar de [Y] a [Z] sin [A, B, C]")
+   - **Output 3**: Método Único (fórmula: "He [MÉTODO] que ha [RESULTADOS] en [TIEMPO]...")
+4. **Documento**: Integra los 3 outputs en una plantilla profesional de Google Docs
 5. **PDF**: Descarga el documento personalizado como PDF
-6. **Email**: Envía el PDF al usuario vía Gmail
+6. **Email**: Envía el PDF al usuario vía Gmail con copy personalizado
 7. **Seguimiento**: Después de 24h, envía mensaje por WhatsApp
 8. **Feedback**: Captura la respuesta del usuario y solicita valoración 0-10
-9. **Actualización**: Registra todo el proceso en Google Sheets
+9. **Actualización**: Registra todo el proceso en Google Sheets (12 columnas de tracking)
 
 ## 🎯 Características
 
