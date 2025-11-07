@@ -1,5 +1,5 @@
 {
-  "name": "Google Form → Claude → PDF → Email → WhatsApp",
+  "name": "Google Form → Claude → Doc → Email → WhatsApp",
   "nodes": [
     {
       "parameters": {
@@ -197,46 +197,66 @@
     },
     {
       "parameters": {
+        "operation": "update",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "email",
+        "matchValue": "={{$json.email}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "estado": "Documento enviado",
+            "documento_enviado": "={{$now.format('DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      },
+      "name": "Actualizar Google Sheet - Doc Enviado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1950, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
         "rule": {
           "interval": [
             {
-              "field": "hours",
-              "hoursInterval": 24
+              "field": "minutes",
+              "minutesInterval": 30
             }
           ]
         }
       },
-      "name": "Esperar 24 Horas",
+      "name": "Esperar 30 Minutos",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
-      "position": [1950, 300],
-      "webhookId": "auto-generated"
+      "position": [2150, 300],
+      "webhookId": "auto-generated-wait-30min"
     },
     {
       "parameters": {
         "operation": "sendTemplate",
         "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
         "recipientPhoneNumber": "={{$json.telefono}}",
-        "template": "={{$env.WHATSAPP_TEMPLATE_NAME}}",
+        "template": "esdecodificador",
         "templateLanguage": "es",
         "components": {
-          "values": [
-            {
-              "type": "body",
-              "parameters": [
-                {
-                  "type": "text",
-                  "text": "={{$json.nombre}}"
-                }
-              ]
-            }
-          ]
+          "values": []
         }
       },
-      "name": "WhatsApp - Enviar Mensaje 24h",
+      "name": "WhatsApp - Plantilla Inicial",
       "type": "n8n-nodes-base.whatsapp",
       "typeVersion": 1,
-      "position": [2150, 300],
+      "position": [2350, 300],
       "credentials": {
         "whatsAppApi": {
           "id": "7",
@@ -258,16 +278,330 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "estado": "Documento enviado",
-            "documento_enviado": "={{$now.format('DD/MM/YYYY HH:mm')}}",
+            "estado": "WA1 enviado",
             "whatsapp_activado": "={{$now.format('DD/MM/YYYY HH:mm')}}"
           }
         }
       },
-      "name": "Actualizar Google Sheet - Envío Completado",
+      "name": "Actualizar Sheet - WA1 Enviado",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
-      "position": [2350, 300],
+      "position": [2550, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            }
+          ]
+        }
+      },
+      "name": "Esperar 4 Horas",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [2750, 300],
+      "webhookId": "auto-generated-wait-4h"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "filters": {
+            "values": [
+              {
+                "column": "email",
+                "value": "={{$json.email}}"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Leer Sheet - Verificar Estado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [2950, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.estado}}",
+              "operation": "equals",
+              "value2": "WA1 enviado"
+            }
+          ]
+        }
+      },
+      "name": "¿Sigue sin responder?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [3150, 300]
+    },
+    {
+      "parameters": {
+        "operation": "sendTemplate",
+        "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
+        "recipientPhoneNumber": "={{$json.telefono}}",
+        "template": "recordatorio_1",
+        "templateLanguage": "es",
+        "components": {
+          "values": []
+        }
+      },
+      "name": "WhatsApp - Recordatorio 1",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [3350, 200],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "7",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "email",
+        "matchValue": "={{$json.email}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "estado": "WA2 enviado"
+          }
+        }
+      },
+      "name": "Actualizar Sheet - WA2 Enviado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [3550, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 18
+            }
+          ]
+        }
+      },
+      "name": "Esperar 18 Horas",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [3750, 200],
+      "webhookId": "auto-generated-wait-18h"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "filters": {
+            "values": [
+              {
+                "column": "email",
+                "value": "={{$json.email}}"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Leer Sheet - Verificar Estado 2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [3950, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.estado}}",
+              "operation": "equals",
+              "value2": "WA2 enviado"
+            }
+          ]
+        }
+      },
+      "name": "¿Sigue sin responder? 2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [4150, 200]
+    },
+    {
+      "parameters": {
+        "operation": "sendTemplate",
+        "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
+        "recipientPhoneNumber": "={{$json.telefono}}",
+        "template": "recordatorio_2",
+        "templateLanguage": "es",
+        "components": {
+          "values": []
+        }
+      },
+      "name": "WhatsApp - Recordatorio 2",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [4350, 100],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "7",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "email",
+        "matchValue": "={{$json.email}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "estado": "WA3 enviado"
+          }
+        }
+      },
+      "name": "Actualizar Sheet - WA3 Enviado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [4550, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "name": "Esperar 24 Horas Final",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [4750, 100],
+      "webhookId": "auto-generated-wait-24h-final"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "filters": {
+            "values": [
+              {
+                "column": "email",
+                "value": "={{$json.email}}"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Leer Sheet - Verificar Estado Final",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [4950, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.estado}}",
+              "operation": "equals",
+              "value2": "WA3 enviado"
+            }
+          ]
+        }
+      },
+      "name": "¿Ghosteo final?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [5150, 100]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "email",
+        "matchValue": "={{$json.email}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "whatsapp_activado": "Ghosteo",
+            "estado": "Ghosteo - sin respuesta"
+          }
+        }
+      },
+      "name": "Marcar Ghosteo",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [5350, 0],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2",
@@ -294,6 +628,35 @@
     },
     {
       "parameters": {
+        "operation": "update",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "telefono",
+        "matchValue": "={{$json.from}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "estado": "Usuario respondió WA"
+          }
+        }
+      },
+      "name": "Actualizar Sheet - Usuario Respondió",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [450, 600],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
         "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
         "recipientPhoneNumber": "={{$json.from}}",
         "message": "¡Gracias por tu respuesta! 🙌\n\nNos encantaría conocer tu opinión sobre el análisis de nicho que te enviamos.\n\n¿Qué nota le darías del 0 al 10?\n\nSimplemente responde con un número."
@@ -301,7 +664,7 @@
       "name": "WhatsApp - Preguntar Feedback",
       "type": "n8n-nodes-base.whatsapp",
       "typeVersion": 1,
-      "position": [450, 600],
+      "position": [650, 600],
       "credentials": {
         "whatsAppApi": {
           "id": "7",
@@ -323,7 +686,7 @@
       "name": "WhatsApp - Recibir Nota Feedback",
       "type": "n8n-nodes-base.whatsappTrigger",
       "typeVersion": 1,
-      "position": [650, 600],
+      "position": [850, 600],
       "webhookId": "auto-generated-2",
       "credentials": {
         "whatsAppApi": {
@@ -347,7 +710,7 @@
       "name": "Validar Nota (0-10)",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [850, 600]
+      "position": [1050, 600]
     },
     {
       "parameters": {
@@ -371,7 +734,7 @@
       "name": "Actualizar Google Sheet - Feedback",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
-      "position": [1050, 550],
+      "position": [1250, 550],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2",
@@ -388,7 +751,7 @@
       "name": "WhatsApp - Agradecer Feedback",
       "type": "n8n-nodes-base.whatsapp",
       "typeVersion": 1,
-      "position": [1250, 550],
+      "position": [1450, 550],
       "credentials": {
         "whatsAppApi": {
           "id": "7",
@@ -399,180 +762,100 @@
   ],
   "connections": {
     "Google Forms Trigger": {
-      "main": [
-        [
-          {
-            "node": "Detectar País",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Detectar País", "type": "main", "index": 0 }]]
     },
     "Detectar País": {
-      "main": [
-        [
-          {
-            "node": "Actualizar Google Sheet - Registro Inicial",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Actualizar Google Sheet - Registro Inicial", "type": "main", "index": 0 }]]
     },
     "Actualizar Google Sheet - Registro Inicial": {
-      "main": [
-        [
-          {
-            "node": "Claude - Generar 3 Outputs",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Claude - Generar 3 Outputs", "type": "main", "index": 0 }]]
     },
     "Claude - Generar 3 Outputs": {
-      "main": [
-        [
-          {
-            "node": "Separar Outputs de Claude",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Separar Outputs de Claude", "type": "main", "index": 0 }]]
     },
     "Separar Outputs de Claude": {
-      "main": [
-        [
-          {
-            "node": "Google Docs - Copiar Plantilla",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Google Docs - Copiar Plantilla", "type": "main", "index": 0 }]]
     },
     "Google Docs - Copiar Plantilla": {
-      "main": [
-        [
-          {
-            "node": "Google Docs - Reemplazar Texto",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Google Docs - Reemplazar Texto", "type": "main", "index": 0 }]]
     },
     "Google Docs - Reemplazar Texto": {
-      "main": [
-        [
-          {
-            "node": "Google Drive - Compartir Documento",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Google Drive - Compartir Documento", "type": "main", "index": 0 }]]
     },
     "Google Drive - Compartir Documento": {
-      "main": [
-        [
-          {
-            "node": "Gmail - Enviar Documento",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Gmail - Enviar Documento", "type": "main", "index": 0 }]]
     },
     "Gmail - Enviar Documento": {
-      "main": [
-        [
-          {
-            "node": "Esperar 24 Horas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Actualizar Google Sheet - Doc Enviado", "type": "main", "index": 0 }]]
     },
-    "Esperar 24 Horas": {
-      "main": [
-        [
-          {
-            "node": "WhatsApp - Enviar Mensaje 24h",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+    "Actualizar Google Sheet - Doc Enviado": {
+      "main": [[{ "node": "Esperar 30 Minutos", "type": "main", "index": 0 }]]
     },
-    "WhatsApp - Enviar Mensaje 24h": {
-      "main": [
-        [
-          {
-            "node": "Actualizar Google Sheet - Envío Completado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+    "Esperar 30 Minutos": {
+      "main": [[{ "node": "WhatsApp - Plantilla Inicial", "type": "main", "index": 0 }]]
+    },
+    "WhatsApp - Plantilla Inicial": {
+      "main": [[{ "node": "Actualizar Sheet - WA1 Enviado", "type": "main", "index": 0 }]]
+    },
+    "Actualizar Sheet - WA1 Enviado": {
+      "main": [[{ "node": "Esperar 4 Horas", "type": "main", "index": 0 }]]
+    },
+    "Esperar 4 Horas": {
+      "main": [[{ "node": "Leer Sheet - Verificar Estado", "type": "main", "index": 0 }]]
+    },
+    "Leer Sheet - Verificar Estado": {
+      "main": [[{ "node": "¿Sigue sin responder?", "type": "main", "index": 0 }]]
+    },
+    "¿Sigue sin responder?": {
+      "main": [[{ "node": "WhatsApp - Recordatorio 1", "type": "main", "index": 0 }], []]
+    },
+    "WhatsApp - Recordatorio 1": {
+      "main": [[{ "node": "Actualizar Sheet - WA2 Enviado", "type": "main", "index": 0 }]]
+    },
+    "Actualizar Sheet - WA2 Enviado": {
+      "main": [[{ "node": "Esperar 18 Horas", "type": "main", "index": 0 }]]
+    },
+    "Esperar 18 Horas": {
+      "main": [[{ "node": "Leer Sheet - Verificar Estado 2", "type": "main", "index": 0 }]]
+    },
+    "Leer Sheet - Verificar Estado 2": {
+      "main": [[{ "node": "¿Sigue sin responder? 2", "type": "main", "index": 0 }]]
+    },
+    "¿Sigue sin responder? 2": {
+      "main": [[{ "node": "WhatsApp - Recordatorio 2", "type": "main", "index": 0 }], []]
+    },
+    "WhatsApp - Recordatorio 2": {
+      "main": [[{ "node": "Actualizar Sheet - WA3 Enviado", "type": "main", "index": 0 }]]
+    },
+    "Actualizar Sheet - WA3 Enviado": {
+      "main": [[{ "node": "Esperar 24 Horas Final", "type": "main", "index": 0 }]]
+    },
+    "Esperar 24 Horas Final": {
+      "main": [[{ "node": "Leer Sheet - Verificar Estado Final", "type": "main", "index": 0 }]]
+    },
+    "Leer Sheet - Verificar Estado Final": {
+      "main": [[{ "node": "¿Ghosteo final?", "type": "main", "index": 0 }]]
+    },
+    "¿Ghosteo final?": {
+      "main": [[{ "node": "Marcar Ghosteo", "type": "main", "index": 0 }], []]
     },
     "WhatsApp - Recibir Respuesta": {
-      "main": [
-        [
-          {
-            "node": "WhatsApp - Preguntar Feedback",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Actualizar Sheet - Usuario Respondió", "type": "main", "index": 0 }]]
+    },
+    "Actualizar Sheet - Usuario Respondió": {
+      "main": [[{ "node": "WhatsApp - Preguntar Feedback", "type": "main", "index": 0 }]]
     },
     "WhatsApp - Preguntar Feedback": {
-      "main": [
-        [
-          {
-            "node": "WhatsApp - Recibir Nota Feedback",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "WhatsApp - Recibir Nota Feedback", "type": "main", "index": 0 }]]
     },
     "WhatsApp - Recibir Nota Feedback": {
-      "main": [
-        [
-          {
-            "node": "Validar Nota (0-10)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Validar Nota (0-10)", "type": "main", "index": 0 }]]
     },
     "Validar Nota (0-10)": {
-      "main": [
-        [
-          {
-            "node": "Actualizar Google Sheet - Feedback",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Actualizar Google Sheet - Feedback", "type": "main", "index": 0 }], []]
     },
     "Actualizar Google Sheet - Feedback": {
-      "main": [
-        [
-          {
-            "node": "WhatsApp - Agradecer Feedback",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "WhatsApp - Agradecer Feedback", "type": "main", "index": 0 }]]
     }
   },
   "pinData": {},
@@ -583,5 +866,5 @@
   "tags": [],
   "triggerCount": 0,
   "updatedAt": "2025-11-07T00:00:00.000Z",
-  "versionId": "1"
+  "versionId": "2"
 }
