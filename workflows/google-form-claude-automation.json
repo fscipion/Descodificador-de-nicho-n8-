@@ -363,17 +363,7 @@
         "template": "recordatorio_1",
         "templateLanguage": "es",
         "components": {
-          "values": [
-            {
-              "type": "body",
-              "parameters": [
-                {
-                  "type": "text",
-                  "text": "={{$json.nombre}}"
-                }
-              ]
-            }
-          ]
+          "values": []
         }
       },
       "name": "WhatsApp - Recordatorio 1",
