@@ -20,9 +20,18 @@
     },
     {
       "parameters": {
+        "functionCode": "// Detectar país desde el código de teléfono internacional\nconst countryCodeMap = {\n  '1': 'Estados Unidos/Canadá',\n  '34': 'España',\n  '52': 'México',\n  '54': 'Argentina',\n  '55': 'Brasil',\n  '56': 'Chile',\n  '57': 'Colombia',\n  '58': 'Venezuela',\n  '351': 'Portugal',\n  '502': 'Guatemala',\n  '503': 'El Salvador',\n  '504': 'Honduras',\n  '505': 'Nicaragua',\n  '506': 'Costa Rica',\n  '507': 'Panamá',\n  '51': 'Perú',\n  '53': 'Cuba',\n  '593': 'Ecuador',\n  '595': 'Paraguay',\n  '598': 'Uruguay',\n  '591': 'Bolivia',\n  '33': 'Francia',\n  '39': 'Italia',\n  '44': 'Reino Unido',\n  '49': 'Alemania'\n};\n\nreturn items.map(item => {\n  const telefono = item.json.telefono || '';\n  let pais = 'Desconocido';\n  \n  if (telefono.startsWith('+')) {\n    // Extraer código sin el +\n    const phoneNumber = telefono.substring(1);\n    \n    // Intentar matches de 3 dígitos primero, luego 2, luego 1\n    for (let len = 3; len >= 1; len--) {\n      const code = phoneNumber.substring(0, len);\n      if (countryCodeMap[code]) {\n        pais = countryCodeMap[code];\n        break;\n      }\n    }\n  }\n  \n  return {\n    json: {\n      ...item.json,\n      pais: pais\n    }\n  };\n});"
+      },
+      "name": "Detectar País",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [350, 300]
+    },
+    {
+      "parameters": {
         "operation": "append",
         "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
-        "range": "Seguimiento!A:L",
+        "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
         },
@@ -37,6 +46,7 @@
             "p2_resultado": "={{$json.p2_resultado}}",
             "p3_target": "={{$json.p3_target}}",
             "p4_transformaciones": "={{$json.p4_transformaciones}}",
+            "pais": "={{$json.pais}}",
             "estado": "Formulario recibido",
             "documento_enviado": "",
             "whatsapp_activado": "",
@@ -47,7 +57,7 @@
       "name": "Actualizar Google Sheet - Registro Inicial",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
-      "position": [450, 300],
+      "position": [550, 300],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2",
@@ -67,7 +77,7 @@
       "name": "Claude - Generar 3 Outputs",
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1,
-      "position": [650, 300],
+      "position": [750, 300],
       "credentials": {
         "anthropicApi": {
           "id": "3",
@@ -82,7 +92,7 @@
       "name": "Separar Outputs de Claude",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [850, 300]
+      "position": [950, 300]
     },
     {
       "parameters": {
@@ -94,7 +104,7 @@
       "name": "Google Docs - Copiar Plantilla",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1050, 300],
+      "position": [1150, 300],
       "credentials": {
         "googleDriveOAuth2Api": {
           "id": "4",
@@ -134,7 +144,7 @@
       "name": "Google Docs - Reemplazar Texto",
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
-      "position": [1250, 300],
+      "position": [1350, 300],
       "credentials": {
         "googleDocsOAuth2Api": {
           "id": "5",
@@ -157,7 +167,7 @@
       "name": "Google Drive - Descargar como PDF",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1450, 300],
+      "position": [1550, 300],
       "credentials": {
         "googleDriveOAuth2Api": {
           "id": "4",
@@ -178,7 +188,7 @@
       "name": "Gmail - Enviar Documento",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
-      "position": [1650, 300],
+      "position": [1750, 300],
       "credentials": {
         "gmailOAuth2": {
           "id": "6",
@@ -200,7 +210,7 @@
       "name": "Esperar 24 Horas",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
-      "position": [1850, 300],
+      "position": [1950, 300],
       "webhookId": "auto-generated"
     },
     {
@@ -227,7 +237,7 @@
       "name": "WhatsApp - Enviar Mensaje 24h",
       "type": "n8n-nodes-base.whatsapp",
       "typeVersion": 1,
-      "position": [2050, 300],
+      "position": [2150, 300],
       "credentials": {
         "whatsAppApi": {
           "id": "7",
@@ -239,7 +249,7 @@
       "parameters": {
         "operation": "update",
         "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
-        "range": "Seguimiento!A:L",
+        "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
         },
@@ -258,7 +268,7 @@
       "name": "Actualizar Google Sheet - Envío Completado",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
-      "position": [2250, 300],
+      "position": [2350, 300],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2",
@@ -344,7 +354,7 @@
       "parameters": {
         "operation": "update",
         "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
-        "range": "Seguimiento!A:L",
+        "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
         },
@@ -390,6 +400,17 @@
   ],
   "connections": {
     "Google Forms Trigger": {
+      "main": [
+        [
+          {
+            "node": "Detectar País",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detectar País": {
       "main": [
         [
           {
