@@ -1,0 +1,575 @@
+{
+  "name": "Google Form → Claude → PDF → Email → WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "={{$env.GOOGLE_FORM_ID}}",
+        "triggerOn": "formSubmit"
+      },
+      "name": "Google Forms Trigger",
+      "type": "n8n-nodes-base.googleFormsTrigger",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "auto-generated",
+      "credentials": {
+        "googleApi": {
+          "id": "1",
+          "name": "Google Forms API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:K",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{$json.timestamp}}",
+            "email": "={{$json.email}}",
+            "nombre": "={{$json.nombre}}",
+            "empresa": "={{$json.empresa}}",
+            "nicho": "={{$json.nicho}}",
+            "problema": "={{$json.problema}}",
+            "estado": "Formulario recibido",
+            "documento_enviado": "",
+            "whatsapp_activado": "",
+            "feedback_nota": "",
+            "notas": ""
+          }
+        }
+      },
+      "name": "Actualizar Google Sheet - Registro Inicial",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [450, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "claude-3-5-sonnet-20241022",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 4000
+        },
+        "prompt": "=Eres un experto en análisis de nichos de mercado y creación de estrategias personalizadas.\n\nDatos del usuario:\n- Nombre: {{$json.nombre}}\n- Empresa: {{$json.empresa}}\n- Nicho: {{$json.nicho}}\n- Problema principal: {{$json.problema}}\n- Objetivos: {{$json.objetivos}}\n- Audiencia target: {{$json.audiencia}}\n- Competencia: {{$json.competencia}}\n\nPor favor, genera EXACTAMENTE 3 outputs separados por '###OUTPUT_SEPARATOR###':\n\n1. CUSTOM INSTRUCTIONS (máximo 800 palabras):\nInstrucciones personalizadas para trabajar con este nicho, incluyendo:\n- Tono y estilo de comunicación recomendado\n- Palabras clave y terminología del sector\n- Ángulos de diferenciación únicos\n- Errores comunes a evitar\n\n2. TRAINING DATA (máximo 1000 palabras):\nDatos de entrenamiento estructurados que incluyan:\n- Ejemplos de casos de éxito en nichos similares\n- Framework de análisis de competencia\n- Plantillas de mensajes que resuenan con esta audiencia\n- Métricas clave a seguir\n\n3. PLAN DE ACCIÓN (máximo 800 palabras):\nPlan de acción inmediato de 30 días que incluya:\n- Semana 1-2: Acciones específicas\n- Semana 3-4: Siguientes pasos\n- Quick wins (victorias rápidas)\n- KPIs a monitorizar\n\nFormato importante:\nOUTPUT1\n###OUTPUT_SEPARATOR###\nOUTPUT2\n###OUTPUT_SEPARATOR###\nOUTPUT3"
+      },
+      "name": "Claude - Generar 3 Outputs",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "credentials": {
+        "anthropicApi": {
+          "id": "3",
+          "name": "Anthropic API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Separar los 3 outputs de Claude\nconst fullResponse = items[0].json.response || items[0].json.output || items[0].json.text;\nconst outputs = fullResponse.split('###OUTPUT_SEPARATOR###');\n\nconst output1 = outputs[0] ? outputs[0].trim() : '';\nconst output2 = outputs[1] ? outputs[1].trim() : '';\nconst output3 = outputs[2] ? outputs[2].trim() : '';\n\n// Mantener todos los datos del formulario y agregar los outputs de Claude\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    claude_output_1: output1,\n    claude_output_2: output2,\n    claude_output_3: output3,\n    claude_full_response: fullResponse\n  }\n}));"
+      },
+      "name": "Separar Outputs de Claude",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": "={{$env.GOOGLE_DOC_TEMPLATE_ID}}",
+        "name": "=Análisis de Nicho - {{$json.nombre}} - {{$json.empresa}}",
+        "options": {}
+      },
+      "name": "Google Docs - Copiar Plantilla",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1050, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4",
+          "name": "Google Drive API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "replaceText",
+        "documentId": "={{$json.id}}",
+        "replacements": {
+          "values": [
+            {
+              "oldText": "{{NOMBRE_CLIENTE}}",
+              "newText": "={{$json.nombre}}"
+            },
+            {
+              "oldText": "{{EMPRESA}}",
+              "newText": "={{$json.empresa}}"
+            },
+            {
+              "oldText": "{{NICHO}}",
+              "newText": "={{$json.nicho}}"
+            },
+            {
+              "oldText": "{{FECHA}}",
+              "newText": "={{$now.format('DD/MM/YYYY')}}"
+            },
+            {
+              "oldText": "{{CUSTOM_INSTRUCTIONS}}",
+              "newText": "={{$json.claude_output_1}}"
+            },
+            {
+              "oldText": "{{TRAINING_DATA}}",
+              "newText": "={{$json.claude_output_2}}"
+            },
+            {
+              "oldText": "{{PLAN_ACCION}}",
+              "newText": "={{$json.claude_output_3}}"
+            }
+          ]
+        }
+      },
+      "name": "Google Docs - Reemplazar Texto",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [1250, 300],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "5",
+          "name": "Google Docs API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "={{$json.id}}",
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "pdf"
+            }
+          }
+        }
+      },
+      "name": "Google Drive - Descargar como PDF",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1450, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4",
+          "name": "Google Drive API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json.email}}",
+        "subject": "=Tu Análisis Personalizado de Nicho: {{$json.nicho}}",
+        "message": "=Hola {{$json.nombre}},\n\n¡Gracias por completar nuestro formulario de análisis de nicho!\n\nHemos preparado un documento personalizado con:\n✅ Custom Instructions específicas para tu nicho\n✅ Training Data relevante con casos de éxito\n✅ Plan de Acción de 30 días paso a paso\n\nEncontrás el análisis completo en el PDF adjunto.\n\nEn las próximas 24 horas te contactaremos vía WhatsApp para conocer tu feedback y ayudarte con cualquier duda que tengas sobre el documento.\n\n¡Esperamos que te sea de gran utilidad!\n\nSaludos,\nEl equipo de Descodificador de Nicho",
+        "options": {
+          "attachments": "data:application/pdf;base64,={{$json.data}}",
+          "attachmentsPropertyName": "=Análisis_{{$json.empresa}}.pdf"
+        }
+      },
+      "name": "Gmail - Enviar Documento",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1650, 300],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "name": "Esperar 24 Horas",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1850, 300],
+      "webhookId": "auto-generated"
+    },
+    {
+      "parameters": {
+        "operation": "sendTemplate",
+        "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
+        "recipientPhoneNumber": "={{$json.telefono}}",
+        "template": "={{$env.WHATSAPP_TEMPLATE_NAME}}",
+        "templateLanguage": "es",
+        "components": {
+          "values": [
+            {
+              "type": "body",
+              "parameters": [
+                {
+                  "type": "text",
+                  "text": "={{$json.nombre}}"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "name": "WhatsApp - Enviar Mensaje 24h",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [2050, 300],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "7",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:K",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "email",
+        "matchValue": "={{$json.email}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "estado": "Documento enviado",
+            "documento_enviado": "={{$now.format('DD/MM/YYYY HH:mm')}}",
+            "whatsapp_activado": "={{$now.format('DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      },
+      "name": "Actualizar Google Sheet - Envío Completado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [2250, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "triggerOn": "message",
+        "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}"
+      },
+      "name": "WhatsApp - Recibir Respuesta",
+      "type": "n8n-nodes-base.whatsappTrigger",
+      "typeVersion": 1,
+      "position": [250, 600],
+      "webhookId": "auto-generated",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "7",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
+        "recipientPhoneNumber": "={{$json.from}}",
+        "message": "¡Gracias por tu respuesta! 🙌\n\nNos encantaría conocer tu opinión sobre el análisis de nicho que te enviamos.\n\n¿Qué nota le darías del 0 al 10?\n\nSimplemente responde con un número."
+      },
+      "name": "WhatsApp - Preguntar Feedback",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [450, 600],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "7",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "triggerOn": "message",
+        "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
+        "options": {
+          "filter": {
+            "filterBy": "messageType",
+            "messageType": "text"
+          }
+        }
+      },
+      "name": "WhatsApp - Recibir Nota Feedback",
+      "type": "n8n-nodes-base.whatsappTrigger",
+      "typeVersion": 1,
+      "position": [650, 600],
+      "webhookId": "auto-generated-2",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "7",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.text}}",
+              "operation": "regex",
+              "value2": "^([0-9]|10)$"
+            }
+          ]
+        }
+      },
+      "name": "Validar Nota (0-10)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [850, 600]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "range": "Seguimiento!A:K",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "telefono",
+        "matchValue": "={{$json.from}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "feedback_nota": "={{$json.message.text}}",
+            "estado": "Feedback recibido",
+            "notas": "=Nota: {{$json.message.text}}/10 - Recibido el {{$now.format('DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      },
+      "name": "Actualizar Google Sheet - Feedback",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1050, 550],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "={{$env.WHATSAPP_PHONE_NUMBER_ID}}",
+        "recipientPhoneNumber": "={{$json.from}}",
+        "message": "=¡Muchas gracias por tu valoración de {{$json.message.text}}/10! 🎯\n\nNos ayuda mucho a mejorar. ¿Hay algo específico que te gustaría comentar sobre el análisis?\n\nEstamos aquí para ayudarte en lo que necesites."
+      },
+      "name": "WhatsApp - Agradecer Feedback",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [1250, 550],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "7",
+          "name": "WhatsApp Business API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Forms Trigger": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Google Sheet - Registro Inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Google Sheet - Registro Inicial": {
+      "main": [
+        [
+          {
+            "node": "Claude - Generar 3 Outputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Generar 3 Outputs": {
+      "main": [
+        [
+          {
+            "node": "Separar Outputs de Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar Outputs de Claude": {
+      "main": [
+        [
+          {
+            "node": "Google Docs - Copiar Plantilla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs - Copiar Plantilla": {
+      "main": [
+        [
+          {
+            "node": "Google Docs - Reemplazar Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs - Reemplazar Texto": {
+      "main": [
+        [
+          {
+            "node": "Google Drive - Descargar como PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive - Descargar como PDF": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Enviar Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Enviar Documento": {
+      "main": [
+        [
+          {
+            "node": "Esperar 24 Horas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar 24 Horas": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp - Enviar Mensaje 24h",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp - Enviar Mensaje 24h": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Google Sheet - Envío Completado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp - Recibir Respuesta": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp - Preguntar Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp - Preguntar Feedback": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp - Recibir Nota Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp - Recibir Nota Feedback": {
+      "main": [
+        [
+          {
+            "node": "Validar Nota (0-10)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Nota (0-10)": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Google Sheet - Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Google Sheet - Feedback": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp - Agradecer Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-07T00:00:00.000Z",
+  "versionId": "1"
+}

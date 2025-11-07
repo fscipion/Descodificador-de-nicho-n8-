@@ -1,0 +1,53 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# n8n
+.n8n/
+node_modules/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Backups
+*.bak
+backup/
+
+# Test files
+test-data/
+*.test.json
+
+# Credentials (por si acaso)
+credentials.json
+service-account.json
+*.pem
+*.key
+
+# Documentation drafts
+drafts/
