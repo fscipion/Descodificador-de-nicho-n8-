@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "formId": "={{$env.GOOGLE_FORM_ID}}",
+        "formId": "1h2JsFVWLXNbdnx8xloqBOjNJUOcQyj99CS-Zm9D49z4",
         "triggerOn": "formSubmit"
       },
       "name": "Google Forms Trigger",
@@ -30,7 +30,7 @@
     {
       "parameters": {
         "operation": "append",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
@@ -97,10 +97,10 @@
     {
       "parameters": {
         "operation": "copy",
-        "fileId": "={{$env.GOOGLE_DOC_TEMPLATE_ID}}",
+        "fileId": "1hWnEXMispCTCZ97XA3FlQmw6b6r3mWPu1lMuPB1ZX2E",
         "name": "=Descodificador de Nicho - {{$json.email}} - {{$now.format('YYYY-MM-DD')}}",
         "options": {
-          "parents": ["={{$env.GOOGLE_FOLDER_ID_ARCHIVE}}"]
+          "parents": ["1C-kXyP4A1anEHwQJYBe-3ibbYGxnBjN-"]
         }
       },
       "name": "Google Docs - Copiar Plantilla",
@@ -198,7 +198,7 @@
     {
       "parameters": {
         "operation": "update",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
@@ -267,7 +267,7 @@
     {
       "parameters": {
         "operation": "update",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
@@ -314,7 +314,7 @@
     {
       "parameters": {
         "operation": "read",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "filters": {
@@ -380,7 +380,7 @@
     {
       "parameters": {
         "operation": "update",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
@@ -426,7 +426,7 @@
     {
       "parameters": {
         "operation": "read",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "filters": {
@@ -492,7 +492,7 @@
     {
       "parameters": {
         "operation": "update",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
@@ -538,7 +538,7 @@
     {
       "parameters": {
         "operation": "read",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "filters": {
@@ -582,7 +582,7 @@
     {
       "parameters": {
         "operation": "update",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
@@ -629,7 +629,7 @@
     {
       "parameters": {
         "operation": "update",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
@@ -715,7 +715,7 @@
     {
       "parameters": {
         "operation": "update",
-        "sheetId": "={{$env.GOOGLE_SHEET_TRACKING_ID}}",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
         "range": "Seguimiento!A:M",
         "options": {
           "valueInputMode": "USER_ENTERED"
