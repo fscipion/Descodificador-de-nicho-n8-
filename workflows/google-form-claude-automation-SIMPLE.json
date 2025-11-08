@@ -1,0 +1,221 @@
+{
+  "name": "Descodificador de Nicho - SIMPLE",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "event": "rowAdded",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
+        "range": "Form Responses 1"
+      },
+      "name": "Detectar Nueva Respuesta",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Mapear campos del Form a estructura esperada\nconst timestamp = items[0].json['Timestamp'] || new Date().toISOString();\nconst email = items[0].json['Email'];\nconst nombre = items[0].json['Nombre completo'];\nconst telefono = items[0].json['Teléfono (formato internacional +34...)'];\nconst p1_expertise = items[0].json['¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?'];\nconst p2_resultado = items[0].json['¿Qué resultado específico quieres ayudar a lograr a tus clientes?'];\nconst p3_target = items[0].json['¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)'];\nconst p4_transformaciones = items[0].json['¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)'];\n\n// Detectar país desde código telefónico\nconst countryCodeMap = {\n  '1': 'Estados Unidos/Canadá',\n  '34': 'España',\n  '52': 'México',\n  '54': 'Argentina',\n  '55': 'Brasil',\n  '56': 'Chile',\n  '57': 'Colombia',\n  '58': 'Venezuela',\n  '351': 'Portugal',\n  '51': 'Perú',\n  '33': 'Francia'\n};\n\nlet pais = 'Desconocido';\nif (telefono && telefono.startsWith('+')) {\n  const phoneNumber = telefono.substring(1);\n  for (let len = 3; len >= 1; len--) {\n    const code = phoneNumber.substring(0, len);\n    if (countryCodeMap[code]) {\n      pais = countryCodeMap[code];\n      break;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    timestamp,\n    email,\n    nombre,\n    telefono,\n    pais,\n    p1_expertise,\n    p2_resultado,\n    p3_target,\n    p4_transformaciones\n  }\n}];"
+      },
+      "name": "Mapear y Detectar País",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{$json.timestamp}}",
+            "email": "={{$json.email}}",
+            "nombre": "={{$json.nombre}}",
+            "telefono": "={{$json.telefono}}",
+            "pais": "={{$json.pais}}",
+            "p1_expertise": "={{$json.p1_expertise}}",
+            "p2_resultado": "={{$json.p2_resultado}}",
+            "p3_target": "={{$json.p3_target}}",
+            "p4_transformaciones": "={{$json.p4_transformaciones}}",
+            "estado": "Formulario recibido",
+            "documento_enviado": "",
+            "whatsapp_activado": "",
+            "feedback_nota": ""
+          }
+        }
+      },
+      "name": "Guardar en CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "model": "claude-3-5-sonnet-20241022",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 4000
+        },
+        "prompt": "=Eres el Descodificador de Nicho™, un experto en análisis estratégico de nichos de mercado.\n\nTu misión es analizar las respuestas del usuario y generar 3 outputs estratégicos ultra-específicos basados en investigación real del mercado.\n\n## RESPUESTAS DEL USUARIO:\n\nP1 - Expertise/Habilidad: {{$json.p1_expertise}}\nP2 - Resultado Deseado: {{$json.p2_resultado}}\nP3 - Target Específico: {{$json.p3_target}}\nP4 - Transformaciones Logradas: {{$json.p4_transformaciones}}\n\n## TU PROCESO:\n\n1. ANALIZA el mercado/nicho identificado en P1\n2. DEDUCE información crítica:\n   - Intentos fallidos típicos del target (3-5 actividades comunes que NO funcionaron)\n   - Diferenciadores únicos viables (gaps en el mercado actual)\n   - Perfil demográfico y psicográfico completo del target\n   - Lenguaje que usa el target (no jerga de marketing)\n3. GENERA los 3 outputs con máxima especificidad\n\n## INSTRUCCIONES CRÍTICAS:\n\n- NUNCA inventes datos ficticios - basa TODO en conocimiento real del mercado\n- Sé ULTRA-ESPECÍFICO - evita frases genéricas aplicables a cualquier negocio\n- USA el lenguaje del target - cómo habla realmente el cliente ideal\n- COHERENCIA total entre los 3 documentos - deben contar la misma historia\n- Los números y tiempos deben ser REALISTAS (basados en P4)\n\n## GENERA EXACTAMENTE 3 OUTPUTS SEPARADOS POR '###OUTPUT_SEPARATOR###':\n\n---\n\n### OUTPUT 1: DESCRIPCIÓN DEL CLIENTE IDEAL\n\nFormato requerido:\n\nPERFIL DEL CLIENTE IDEAL\n\nDescripción General:\n[Párrafo descriptivo del target basado en P3, incluyendo contexto profesional/vital. Sé específico y visual.]\n\nRango de Edad: [Deducido de P3 - sé específico, ej: \"35-50 años\"]\n\nPoder Adquisitivo: [Deducido del nicho - ej: \"€2,000-4,000/mes ingresos disponibles\"]\n\nDisparador: [Evento externo que justifica que actúen AHORA - deducido del dolor/situación. Ej: \"Acaba de tener su segundo hijo y la fatiga es insostenible\" o \"Su cliente más grande acaba de cancelar y necesita ingresos estables YA\"]\n\nTop 3 Objetivos:\n• Corto Plazo (0-3 meses): [Versión inmediata del resultado en P2]\n• Medio Plazo (3-6 meses): [Versión intermedia del resultado en P2]\n• Largo Plazo (6-12 meses): [Versión amplificada del resultado en P2]\n\nPuntos de Dolor y Frustraciones Hoy:\n• [Dolor principal explícito en P3]\n• [Frustración derivada 1 - de la situación actual]\n• [Frustración derivada 2 - de intentos fallidos previos]\n\nMiedos y Dudas (Pensando en la solución):\n• [Miedo 1 - basado en intentos fallidos: \"Ya probé X y no funcionó\"]\n• [Miedo 2 - escepticismo del mercado: \"Todos prometen lo mismo\"]\n• [Miedo 3 - inversión vs resultados: \"¿Y si invierto y no funciona?\"]\n\nLo que necesitan para llegar a su meta:\n• [Necesidad 1 - claridad/estrategia específica]\n• [Necesidad 2 - prueba social/credibilidad del método]\n• [Necesidad 3 - implementación práctica paso a paso]\n\n---\n\n### OUTPUT 2: MISIÓN TRANSFORMACIONAL\n\nUsa esta fórmula EXACTA:\n\n\"Ayudo a [P3: TARGET PRECISO - copia literalmente] a pasar de [ESTADO CERO - situación dolorosa actual deducida de P3] a [P2: RESULTADO DESEADO - copia literalmente] sin [ACTIVIDAD DOLOROSA 1], sin [ACTIVIDAD DOLOROSA 2] y sin [ACTIVIDAD DOLOROSA 3].\"\n\nCriterios:\n- TARGET PRECISO: Copia exactamente P3\n- ESTADO CERO: Debe resonar emocionalmente (ej: \"sentirse agotadas cada tarde y dependientes del café\")\n- RESULTADO DESEADO: Copia exactamente P2\n- 3 ACTIVIDADES DOLOROSAS: Deben ser reconocibles y comunes en el mercado (ej: \"dietas restrictivas\", \"entrenamientos a las 6am\", \"suplementos caros\")\n\nEjemplo de calidad:\n\"Ayudo a madres profesionales de 35-50 años con jornadas de +10 horas que sufren fatiga crónica a pasar de sentirse exhaustas cada tarde y dependientes del café a recuperar su energía natural y sentir vitalidad constante durante todo el día sin dietas restrictivas, sin entrenamientos intensos a las 6am y sin suplementos caros.\"\n\n---\n\n### OUTPUT 3: MÉTODO ÚNICO\n\nUsa esta fórmula EXACTA:\n\n\"He [MÉTODO/SISTEMA - crear nombre propietario basado en P1 si no lo dio] que ha [P4: RESULTADO CUANTIFICABLE - incluir números + target] en [P4: TIEMPO - extraer de P4], enfocándome en [DIFERENCIADOR POSITIVO ÚNICO - tu enfoque vs. lo común] en vez de [ENFOQUE COMÚN DEL MERCADO que evitas].\"\n\nIMPORTANTE - NO SOLAPAR CON OUTPUT 2:\n- Output 2 = Promesa al CLIENTE (sin actividades dolorosas del cliente)\n- Output 3 = TU CREDIBILIDAD (tu enfoque único vs. métodos comunes del mercado)\n\nEjemplo de lo que NO hacer:\n❌ \"...sin dietas restrictivas, sin entrenamientos intensos\" (esto ya está en Output 2)\n\nEjemplo de lo que SÍ hacer:\n✅ \"...enfocándome en equilibrio hormonal natural y nutrición adaptativa en vez de protocolos keto rígidos y ayuno intermitente extremo\"\n\nCriterios:\n- MÉTODO: Debe sonar propietario (ej: \"Sistema de Energía Hormonal™\", \"Framework de Ventas Automatizadas 3x5\")\n- NÚMEROS: Incluir de P4 (ej: \"más de 100 mujeres\", \"47 consultores\")\n- TIEMPO: Extraer de P4 (ej: \"en 12 semanas\", \"en 60 días\")\n- DIFERENCIADOR: Contrasta tu ENFOQUE POSITIVO vs. lo común (métodos del mercado, no dolores del cliente)\n\nEjemplo de calidad:\n\"He creado el Sistema de Energía Hormonal™ que ha ayudado a más de 100 mujeres profesionales a recuperar su energía en 12 semanas, enfocándome en equilibrio hormonal natural y nutrición adaptativa en vez de protocolos keto rígidos y ayuno intermitente extremo.\"\n\n---\n\nFORMATO DE RESPUESTA (CRÍTICO):\n\nOUTPUT1_COMPLETO_AQUÍ\n###OUTPUT_SEPARATOR###\nOUTPUT2_COMPLETO_AQUÍ\n###OUTPUT_SEPARATOR###\nOUTPUT3_COMPLETO_AQUÍ\n\nGenera ahora los 3 outputs con máxima calidad y especificidad."
+      },
+      "name": "Claude - Generar Outputs",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Separar los 3 outputs de Claude\nconst fullResponse = items[0].json.response || items[0].json.output || items[0].json.text;\nconst outputs = fullResponse.split('###OUTPUT_SEPARATOR###');\n\nconst output1 = outputs[0] ? outputs[0].trim() : '';\nconst output2 = outputs[1] ? outputs[1].trim() : '';\nconst output3 = outputs[2] ? outputs[2].trim() : '';\n\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    cliente_ideal: output1,\n    mision_transformacional: output2,\n    metodo_unico: output3\n  }\n}));"
+      },
+      "name": "Separar Outputs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": "1hWnEXMispCTCZ97XA3FlQmw6b6r3mWPu1lMuPB1ZX2E",
+        "name": "=Descodificador de Nicho - {{$json.email}} - {{$now.format('YYYY-MM-DD')}}",
+        "options": {
+          "parents": ["1C-kXyP4A1anEHwQJYBe-3ibbYGxnBjN-"]
+        }
+      },
+      "name": "Copiar Plantilla",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "replaceText",
+        "documentId": "={{$json.id}}",
+        "replacements": {
+          "values": [
+            {
+              "oldText": "{{NOMBRE_CLIENTE}}",
+              "newText": "={{$json.nombre}}"
+            },
+            {
+              "oldText": "{{FECHA}}",
+              "newText": "={{$now.format('DD/MM/YYYY')}}"
+            },
+            {
+              "oldText": "{{CLIENTE_IDEAL}}",
+              "newText": "={{$json.cliente_ideal}}"
+            },
+            {
+              "oldText": "{{MISION_TRANSFORMACIONAL}}",
+              "newText": "={{$json.mision_transformacional}}"
+            },
+            {
+              "oldText": "{{METODO_UNICO}}",
+              "newText": "={{$json.metodo_unico}}"
+            }
+          ]
+        }
+      },
+      "name": "Rellenar Documento",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": "={{$json.id}}",
+        "permissions": {
+          "role": "writer",
+          "type": "anyone"
+        },
+        "options": {}
+      },
+      "name": "Compartir Documento",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json.email}}",
+        "subject": "={{$json.nombre}}, tu descodificador de nicho dentro",
+        "message": "=¡Aloha {{$json.nombre}}!\n\n¡Yeaaaahhhh! Estoy entusiasmado de entregarte tu Decodificador de Nicho personalizado.\n\n¿Qué es el Decodificador de Nicho?\n\nBueno, habiendo ayudado a miles de personas a construir negocios exitosos de educación en línea desde 2010, he descubierto que el éxito y el fracaso se reducen a un elemento crucial: ¿qué tan bien conoces y entiendes las necesidades de tu cliente ideal?\n\nEste decodificador fue creado para acelerar el proceso de identificar exactamente quién es tu cliente ideal, cómo explicar tu misión para captar la atención, y cómo explicar tu diferencia en una frase. Sin esto crakeado, serás invisible online, y no es especialmente lo que te deseo.\n\nEste es un documento funcional, así que puedes editarlo y ajustarlo como consideres conveniente.\n\n⇒ Haz clic aquí para acceder a tu Decodificador de Nicho:\nhttps://docs.google.com/document/d/{{$json.id}}/edit\n\n¡Hablemos rápido para acelerar hacia tus metas más locas!\n\nFranck y todo el equipo de LaTransformateca.com",
+        "options": {
+          "senderName": "Franck - LaTransformateca"
+        }
+      },
+      "name": "Enviar Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
+        "range": "Seguimiento!A:M",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMode": "autoMapInputData",
+        "matchColumn": "email",
+        "matchValue": "={{$json.email}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "estado": "Documento enviado",
+            "documento_enviado": "={{$now.format('DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      },
+      "name": "Actualizar CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [2050, 300]
+    }
+  ],
+  "connections": {
+    "Detectar Nueva Respuesta": {
+      "main": [[{"node": "Mapear y Detectar País", "type": "main", "index": 0}]]
+    },
+    "Mapear y Detectar País": {
+      "main": [[{"node": "Guardar en CRM", "type": "main", "index": 0}]]
+    },
+    "Guardar en CRM": {
+      "main": [[{"node": "Claude - Generar Outputs", "type": "main", "index": 0}]]
+    },
+    "Claude - Generar Outputs": {
+      "main": [[{"node": "Separar Outputs", "type": "main", "index": 0}]]
+    },
+    "Separar Outputs": {
+      "main": [[{"node": "Copiar Plantilla", "type": "main", "index": 0}]]
+    },
+    "Copiar Plantilla": {
+      "main": [[{"node": "Rellenar Documento", "type": "main", "index": 0}]]
+    },
+    "Rellenar Documento": {
+      "main": [[{"node": "Compartir Documento", "type": "main", "index": 0}]]
+    },
+    "Compartir Documento": {
+      "main": [[{"node": "Enviar Email", "type": "main", "index": 0}]]
+    },
+    "Enviar Email": {
+      "main": [[{"node": "Actualizar CRM", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
