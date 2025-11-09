@@ -1,0 +1,862 @@
+{
+  "name": "Descodificador de Nicho - SIMPLE",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
+          "mode": "list",
+          "cachedResultName": "Descodificador de Nicho (respuestas)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1132585827,
+          "mode": "list",
+          "cachedResultName": "CRM de Seguimiento - Descodificador",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8/edit#gid=1132585827"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.Email }}",
+            "País": "={{ $json['País'] }}",
+            "Nombre": "={{ $json.Nombre }}",
+            "Marca temporal": "={{ $json['Marca temporal'] }}",
+            "Teléfono (formato internacional +34...)": "={{ $json['Teléfono (formato internacional +34...)'] }}",
+            "¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?": "={{ $('Google Sheets Trigger').item.json['¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?'] }}",
+            "¿Qué resultado específico quieres ayudar a lograr a tus clientes?": "={{ $('Google Sheets Trigger').item.json['¿Qué resultado específico quieres ayudar a lograr a tus clientes?'] }}",
+            "¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)": "={{ $('Google Sheets Trigger').item.json['¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)'] }}",
+            "¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)": "={{ $('Google Sheets Trigger').item.json['¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)'] }}",
+            "Estado": "={{ $('Google Sheets Trigger').item.json.Estado }}",
+            "Documento enviado": "={{ $('Google Sheets Trigger').item.json['Documento enviado'] }}",
+            "WhatsApp enviado": "={{ $('Google Sheets Trigger').item.json['WhatsApp enviado'] }}",
+            "Nota del Feedback": "={{ $('Google Sheets Trigger').item.json['Nota del Feedback'] }}",
+            "id": "={{ $('Google Sheets Trigger').item.json.id }}",
+            "threadId": "={{ $('Google Sheets Trigger').item.json.threadId }}",
+            "labelIds": "={{ $('Google Sheets Trigger').item.json.labelIds }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Marca temporal",
+              "displayName": "Marca temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Teléfono (formato internacional +34...)",
+              "displayName": "Teléfono (formato internacional +34...)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "País",
+              "displayName": "País",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?",
+              "displayName": "¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Qué resultado específico quieres ayudar a lograr a tus clientes?",
+              "displayName": "¿Qué resultado específico quieres ayudar a lograr a tus clientes?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)",
+              "displayName": "¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)",
+              "displayName": "¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Documento enviado",
+              "displayName": "Documento enviado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WhatsApp enviado",
+              "displayName": "WhatsApp enviado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nota del Feedback",
+              "displayName": "Nota del Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "threadId",
+              "displayName": "threadId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "labelIds",
+              "displayName": "labelIds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "name": "Guardar en CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -688,
+        272
+      ],
+      "id": "5159a436-7b95-45df-8b5d-43fc2dcd22ee",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lsunGlTFAU2xDaup",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Separar los 3 outputs de Claude\nconst fullResponse = $input.item.json.content[0].text;\nconst outputs = fullResponse.split('###OUTPUT_SEPARATOR###');\n\n// Limpiar dobles saltos de línea\nconst limpiarSaltos = (texto) => {\n  return texto.replace(/\\n\\n+/g, '\\n').trim();\n};\n\nconst output1 = outputs[0] ? limpiarSaltos(outputs[0]) : '';\nconst output2 = outputs[1] ? limpiarSaltos(outputs[1]) : '';\nconst output3 = outputs[2] ? limpiarSaltos(outputs[2]) : '';\n\nreturn {\n  ...$input.item.json,\n  claude_output_1: output1,\n  claude_output_2: output2,\n  claude_output_3: output3\n};"
+      },
+      "name": "Separar Outputs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        512
+      ],
+      "id": "6689ca51-3d87-4e7c-a96f-9b82bff4db8b"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1hWnEXMispCTCZ97XA3FlQmw6b6r3mWPu1lMuPB1ZX2E",
+          "mode": "id"
+        },
+        "name": "={{'Descodificador-' + $now.format('yyMMdd') + '-' + $now.format('HH') + 'h' + $now.format('mm') + '-' + $json.Email}}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1C-kXyP4A1anEHwQJYBe-3ibbYGxnBjN-",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "name": "Copiar Plantilla",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -912,
+        512
+      ],
+      "id": "9df74a98-d1b0-460b-9ad9-d4b849124619",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "v7TJRUSbVR8eVAbX",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.documentId }}",
+        "simple": false,
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{{CLIENTE_IDEAL}}",
+              "replaceText": "={{ $json.claude_output_1 }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{MISION_TRANSFORMACIONAL}}",
+              "replaceText": "={{ $json.claude_output_2 }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{METODO_UNICO}}",
+              "replaceText": "={{ $json.claude_output_3 }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{NOMBRE_CLIENTE}}",
+              "replaceText": "={{ $json.Nombre }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{FECHA}}",
+              "replaceText": "={{ $json['Marca temporal'] }}",
+              "matchCase": true
+            }
+          ]
+        }
+      },
+      "name": "Rellenar Documento",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        512
+      ],
+      "id": "aca61ece-f1a0-4718-8bcb-18208a162774",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "mysAlemUqEcjkYOT",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.documentId}}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "name": "Compartir Documento",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -144,
+        512
+      ],
+      "id": "ebb20ec3-08e2-4203-98de-3854dbaa4785",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "v7TJRUSbVR8eVAbX",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Separar Outputs').item.json.Email }}",
+        "subject": "={{ $('Separar Outputs').item.json.Nombre }}, tu descodificador de nicho dentro",
+        "message": "=¡Aloha {{ $('Separar Outputs').item.json.Nombre }}!\n\n¡Yeaaaahhhh! Estoy entusiasmado de entregarte tu Decodificador de Nicho personalizado.\n\n¿Qué es el Decodificador de Nicho?\n\nBueno, habiendo ayudado a miles de personas a construir negocios exitosos de educación en línea desde 2010, he descubierto que el éxito y el fracaso se reducen a un elemento crucial: ¿qué tan bien conoces y entiendes las necesidades de tu cliente ideal?\n\nEste decodificador fue creado para acelerar el proceso de identificar exactamente quién es tu cliente ideal, cómo explicar tu misión para captar la atención, y cómo explicar tu diferencia en una frase. Sin esto crakeado, serás invisible online, y no es especialmente lo que te deseo.\n\nEste es un documento funcional, así que puedes editarlo y ajustarlo como consideres conveniente.\n\n⇒ Haz clic aquí para acceder a tu Decodificador de Nicho:\nhttps://docs.google.com/document/d/{{ $('Rellenar Documento').item.json.documentId }}/edit\n\n¡Hablemos rápido para acelerar hacia tus metas más locas!\n\nFranck y todo el equipo de LaTransformateca.com",
+        "options": {
+          "senderName": "Franck - LaTransformateca"
+        }
+      },
+      "name": "Enviar Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        64,
+        512
+      ],
+      "id": "e85f3948-27ee-4171-985b-b8cfd9c2b0b7",
+      "webhookId": "535bbdea-df2f-4d90-8c2a-7efc21a23bdc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "EYkvKazRuHmqH6wW",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
+          "mode": "list",
+          "cachedResultName": "Descodificador de Nicho (respuestas)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1132585827,
+          "mode": "list",
+          "cachedResultName": "CRM de Seguimiento - Descodificador",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8/edit#gid=1132585827"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "=",
+            "Estado": "Documento enviado",
+            "Documento enviado": "=={{$now.format('yyMMdd - HH:mm')}}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Marca temporal",
+              "displayName": "Marca temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Teléfono (formato internacional +34...)",
+              "displayName": "Teléfono (formato internacional +34...)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "País",
+              "displayName": "País",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?",
+              "displayName": "¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Qué resultado específico quieres ayudar a lograr a tus clientes?",
+              "displayName": "¿Qué resultado específico quieres ayudar a lograr a tus clientes?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)",
+              "displayName": "¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)",
+              "displayName": "¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Documento enviado",
+              "displayName": "Documento enviado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "WhatsApp enviado",
+              "displayName": "WhatsApp enviado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nota del Feedback",
+              "displayName": "Nota del Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "threadId",
+              "displayName": "threadId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "labelIds",
+              "displayName": "labelIds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "name": "Actualizar CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -1136,
+        720
+      ],
+      "id": "df826ad0-91f3-4b6f-98d4-ad7c53065850",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lsunGlTFAU2xDaup",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8",
+          "mode": "list",
+          "cachedResultName": "Descodificador de Nicho (respuestas)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1132585827,
+          "mode": "list",
+          "cachedResultName": "CRM de Seguimiento - Descodificador",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mAvn1tdFoLxYa5Dy2eTZuPQkFWk55Twevqa7KHa4wP8/edit#gid=1132585827"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1136,
+        272
+      ],
+      "id": "de449479-ae38-41d5-a1fb-f0f24580523d",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "v1J61TTa9b8GXIcN",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.anthropic_payload}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -144,
+        272
+      ],
+      "id": "70097599-ea1a-4565-bb32-39b1fce1011f",
+      "name": "HTTP Request",
+      "credentials": {
+        "anthropicApi": {
+          "id": "WbDT2M60FaEjls2Z",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const p1 = $input.item.json['¿En qué eres experto/a? ¿Qué habilidad o conocimiento dominas?'];\nconst p2 = $input.item.json['¿Qué resultado específico quieres ayudar a lograr a tus clientes?'];\nconst p3 = $input.item.json['¿Quién es tu cliente ideal? Sé lo más específico posible (edad, profesión, situación, etc.)'];\nconst p4 = $input.item.json['¿Qué transformaciones has logrado con clientes anteriores? (menciona números, tiempos, resultados concretos)'];\n\nconst prompt = `Eres el Descodificador de Nicho™, un experto en análisis estratégico de nichos de mercado.\n\nRESPUESTAS DEL USUARIO:\n\nP1 - Expertise: ${p1}\nP2 - Resultado Deseado: ${p2}\nP3 - Cliente Ideal: ${p3}\nP4 - Transformaciones: ${p4}\n\nINSTRUCCIONES:\n- Sé ULTRA-ESPECÍFICO basado en el mercado real\n- USA el lenguaje del target\n- Los números deben ser REALISTAS (basados en P4)\n\nGENERA 3 OUTPUTS:\n\nOUTPUT 1: PERFIL DEL CLIENTE IDEAL\n\nPresenta el texto de la respuesta a partir de la linea siguiente:\nDESCRIPCIÓN GENERAL DEL CLIENTE IDEAL:\n[Párrafo descriptivo del target basado en P3 con contexto profesional/vital]\n\nRANGO DE EDAD: [Específico, ej: \"35-50 años\"]\n\nPODER ADQUISITIVO: [Deducido del nicho, ej: \"€2,000-4,000/mes\"]\n\nDISPARADOR: [Evento que justifica actuar AHORA]\n\nTOP 3 OBJETIVOS:\n• Corto Plazo (0-3 meses): [Versión inmediata de P2]\n• Medio Plazo (3-6 meses): [Versión intermedia de P2]\n• Largo Plazo (6-12 meses): [Versión amplificada de P2]\n\nPUNTOS DE DOLOR Y FRUSTRACIONES:\n• [Dolor principal de P3]\n• [Frustración situación actual]\n• [Frustración intentos fallidos]\n\nMIEDOS Y DUDAS:\n• [Ya probé X y no funcionó]\n• [Todos prometen lo mismo]\n• [¿Y si invierto y no funciona?]\n\nLO QUE NECESITAN:\n• [Claridad/estrategia específica]\n• [Prueba social/credibilidad]\n• [Implementación práctica]\n\nOUTPUT 2: MISIÓN TRANSFORMACIONAL\n\nEscribe la frase SIN comillas:\n\nAyudo a [P3 exacto] a pasar de [estado doloroso actual] a [P2 exacto] sin [actividad dolorosa 1], sin [actividad dolorosa 2] y sin [actividad dolorosa 3].\n\nOUTPUT 3: MÉTODO ÚNICO\n\nEscribe la frase SIN comillas:\n\nHe [nombre de método/sistema propietario™] que ha [P4 con números exactos] en [tiempo de P4], enfocándome en [diferenciador positivo] en vez de [métodos comunes del mercado].\n\nESTA ES LA MAGIA DE MI MÉTODO UNICO\n\nCrea acrónimo memorable. Cada letra = componente en MAYÚSCULAS con 2-4 bullets (•).\n\nFORMATO FINAL DE TU RESPUESTA:\n\n[Texto completo del OUTPUT 1]\n###OUTPUT_SEPARATOR###\n[Texto completo del OUTPUT 2]\n###OUTPUT_SEPARATOR###\n[Texto completo del OUTPUT 3]\n\nREGLAS DE FORMATO CRÍTICAS:\n- NO uses Markdown (**, ##, ###)\n- NO uses líneas separadoras (────────────)\n- USA MAYÚSCULAS para títulos (DESCRIPCIÓN GENERAL, RANGO DE EDAD, etc.)\n- USA • para listas\n- PROHIBIDO usar dobles saltos de línea \\n \\n - USA SOLO saltos simples \\n\n- Entre cada sección usa SOLO UN salto de línea, NUNCA dos\n- NO dejes líneas en blanco entre secciones\n- Incluye EXACTAMENTE \"###OUTPUT_SEPARATOR###\" DOS VECES (entre los 3 outputs)\n- NO incluyas líneas decorativas al final de ningún output`;\n\nreturn {\n  ...$input.item.json,\n  anthropic_payload: {\n    \"model\": \"claude-sonnet-4-20250514\",\n    \"max_tokens\": 4000,\n    \"temperature\": 0.7,\n    \"messages\": [\n      {\n        \"role\": \"user\",\n        \"content\": prompt\n      }\n    ]\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        272
+      ],
+      "id": "7f14ada0-09ea-4477-8f57-d165a1e8bf03",
+      "name": "Preparar Anthropic"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Detectar país desde el código de teléfono internacional\nconst countryCodeMap = {\n  '1': 'Estados Unidos/Canadá',\n  '34': 'España',\n  '52': 'México',\n  '54': 'Argentina',\n  '55': 'Brasil',\n  '56': 'Chile',\n  '57': 'Colombia',\n  '58': 'Venezuela',\n  '351': 'Portugal',\n  '502': 'Guatemala',\n  '503': 'El Salvador',\n  '504': 'Honduras',\n  '505': 'Nicaragua',\n  '506': 'Costa Rica',\n  '507': 'Panamá',\n  '51': 'Perú',\n  '53': 'Cuba',\n  '593': 'Ecuador',\n  '595': 'Paraguay',\n  '598': 'Uruguay',\n  '591': 'Bolivia',\n  '33': 'Francia',\n  '39': 'Italia',\n  '44': 'Reino Unido',\n  '49': 'Alemania'\n};\n\nreturn items.map(item => {\n  const telefono = item.json['Teléfono (formato internacional +34...)'] || '';\n  let pais = 'Desconocido';\n  \n  if (telefono.startsWith('+')) {\n    const phoneNumber = telefono.substring(1);\n    for (let len = 3; len >= 1; len--) {\n      const code = phoneNumber.substring(0, len);\n      if (countryCodeMap[code]) {\n        pais = countryCodeMap[code];\n        break;\n      }\n    }\n  }\n  \n  return {\n    json: {\n      ...item.json,\n      'País': pais\n    }\n  };\n});"
+      },
+      "name": "Detectar País",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -912,
+        272
+      ],
+      "id": "d7cef6c4-5b1a-478d-a933-8ee58af95834"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener la respuesta de Claude del input actual\nconst anthropicResponse = $input.item.json;\n\n// Obtener los datos originales del nodo \"Preparar Anthropic\"\nconst prepararData = $('Preparar Anthropic').first().json;\nconst datosOriginales = prepararData.datosOriginales || {};\n\n// Combinar la respuesta de Anthropic con los datos originales\nreturn {\n  json: {\n    ...anthropicResponse,\n    ...datosOriginales\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        272
+      ],
+      "id": "1e73f43b-7b63-4c51-b43c-eb2de6f64496",
+      "name": "Recuperar Datos Originales"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener la respuesta de Claude\nconst anthropicResponse = $input.item.json;\n\n// Obtener TODOS los datos del input (que vienen del nodo HTTP Request)\n// Estos datos YA incluyen todo porque \"Preparar Anthropic\" los pasó al mismo nivel\nconst allData = $input.all();\n\n// Buscar el input que tiene los datos originales (el que NO tiene solo content)\nlet datosOriginales = {};\nfor (const item of allData) {\n  if (item.json.Email) {\n    datosOriginales = item.json;\n    break;\n  }\n}\n\nreturn {\n  ...datosOriginales,\n  ...anthropicResponse\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -672,
+        512
+      ],
+      "id": "cdcc6e99-cb6a-45ce-8b3d-b7f24fe064a2",
+      "name": "Recuperar Datos Después de Copiar"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Separar Outputs": {
+      "main": [
+        [
+          {
+            "node": "Copiar Plantilla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copiar Plantilla": {
+      "main": [
+        [
+          {
+            "node": "Recuperar Datos Después de Copiar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rellenar Documento": {
+      "main": [
+        [
+          {
+            "node": "Compartir Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartir Documento": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Email": {
+      "main": [
+        [
+          {
+            "node": "Actualizar CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Detectar País",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar en CRM": {
+      "main": [
+        [
+          {
+            "node": "Preparar Anthropic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Recuperar Datos Originales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Anthropic": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detectar País": {
+      "main": [
+        [
+          {
+            "node": "Guardar en CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar Datos Originales": {
+      "main": [
+        [
+          {
+            "node": "Separar Outputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar Datos Después de Copiar": {
+      "main": [
+        [
+          {
+            "node": "Rellenar Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "executionTimeout": -1
+  },
+  "versionId": "9b90acd9-63c0-452e-992c-d57c081427fd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d13662e9f197904f9d128b310a6f7becb0b260b6cb42c3c2e20e593b07911cd"
+  },
+  "id": "TQtFgMYrVphebTXT",
+  "tags": []
+}
